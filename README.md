@@ -10,3 +10,6 @@ pip install gymnasium
 ```
 pip install pygame
 ```
+```
+pip install matplotlib
+```
