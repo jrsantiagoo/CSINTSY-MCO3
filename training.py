@@ -10,24 +10,30 @@ from cat_env import make_env
 #############################################################################
 import matplotlib.pyplot as plt
 
-def reward(state: int):
+def reward(state: int, oldstate: int):
     agent_row = state // 1000
     agent_col = (state // 100) % 10
     cat_row = (state // 10) % 10
     cat_col = state % 10
 
-    # if agent_row == cat_row and agent_col == cat_col:
-    #     return 14
-
-    # max_dist = 14
-
-    # dist = abs(agent_row - cat_row) + abs(agent_col - cat_col)
-
-    # return max_dist - dist    
-
     if agent_row == cat_row and agent_col == cat_col:
-        return 1
-    return 0
+        return 100
+
+    
+
+    max_dist = 14
+
+    dist = abs(agent_row - cat_row) + abs(agent_col - cat_col)
+
+    prox = (max_dist - dist) / max_dist
+
+    time_pen = -0.2
+
+    return prox + time_pen    
+
+    # if agent_row == cat_row and agent_col == cat_col:
+    #     return 1
+    # return 0
 
 #############################################################################
 # END OF YOUR CODE. DO NOT MODIFY ANYTHING BEYOND THIS LINE.                #
@@ -51,8 +57,8 @@ def train_bot(cat_name, render: int = -1):
     # Hint: You may want to declare variables for the hyperparameters of the    #
     # training process such as learning rate, exploration rate, etc.            #
     #############################################################################
-    learning_rate_a = 0.9
-    discount_factor_g = 0.9
+    learning_rate_a = 0.1
+    discount_factor_g = 0.95
 
     epsilon = 1
     epsilon_decay_rate = 0.00025
@@ -81,6 +87,8 @@ def train_bot(cat_name, render: int = -1):
         moves = 0
         ep_reward = 0
 
+        prev_state = None
+
         while not done and moves < 60:
             if rng.random() < epsilon:
                 action = random.randint(0,3)
@@ -89,15 +97,23 @@ def train_bot(cat_name, render: int = -1):
 
             new_state, _, done, _, _ = env.step(action)
 
-            r = reward(new_state)
+            r = reward(new_state, state)
+
+            if(new_state == state):
+                r = -5
+            elif new_state == prev_state and prev_state is not None:
+                r += -5
+                
 
             q_table[state][action] = q_table[state][action] + learning_rate_a * (
                 r + discount_factor_g * np.max(q_table[new_state]) - q_table[state][action]
             )
 
+            prev_state = state
             moves += 1
             ep_reward += r
             state = new_state
+            
 
         epsilon = max(epsilon - epsilon_decay_rate, 0)
 
