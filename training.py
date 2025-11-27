@@ -56,11 +56,11 @@ def train_bot(cat_name, render: int = -1):
     # Hint: You may want to declare variables for the hyperparameters of the    #
     # training process such as learning rate, exploration rate, etc.            #
     #############################################################################
-    learning_rate_a = 0.9
-    discount_factor_g = 0.9
+    learning_rate_a = 0.5
+    discount_factor_g = 0.95
 
     epsilon = 1
-    epsilon_decay_rate = 0.00025
+    epsilon_decay_rate = 0.0005
     rng = np.random.default_rng()
 
     rewards_per_ep = np.zeros(episodes + 1)
@@ -95,6 +95,9 @@ def train_bot(cat_name, render: int = -1):
             new_state, _, done, _, _ = env.step(action)
 
             r = reward(new_state, state)
+
+            if state == new_state:
+                r = -10
 
             q_table[state][action] = q_table[state][action] + learning_rate_a * (
                 r + discount_factor_g * np.max(q_table[new_state]) - q_table[state][action]
