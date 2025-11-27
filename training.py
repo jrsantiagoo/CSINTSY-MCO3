@@ -10,23 +10,28 @@ from cat_env import make_env
 #############################################################################
 import matplotlib.pyplot as plt
 
-def reward(state: int):
-    agent_row = state // 1000
-    agent_col = (state // 100) % 10
-    cat_row = (state // 10) % 10
-    cat_col = state % 10
+def reward(new_state: int, old_state: int):
+    agent_row = new_state // 1000
+    agent_col = (new_state // 100) % 10
+    cat_row = (new_state // 10) % 10
+    cat_col = new_state % 10
 
-    # if agent_row == cat_row and agent_col == cat_col:
-    #     return 14
+    old_agent_row = old_state // 1000
+    old_agent_col = (old_state // 100) % 10
+    old_cat_row = (old_state // 10) % 10
+    old_cat_col = old_state % 10
 
-    # max_dist = 14
-
-    # dist = abs(agent_row - cat_row) + abs(agent_col - cat_col)
-
-    # return max_dist - dist    
+    new_dist = abs(agent_row - cat_row) + abs(agent_col - cat_col)
+    old_dist = abs(old_agent_row - old_cat_row) + abs(old_agent_col - old_cat_col)
 
     if agent_row == cat_row and agent_col == cat_col:
-        return 1
+       return 10
+    
+    if new_dist < old_dist:
+        return 5
+    else:
+        return -5
+    
     return 0
 
 #############################################################################
@@ -89,7 +94,7 @@ def train_bot(cat_name, render: int = -1):
 
             new_state, _, done, _, _ = env.step(action)
 
-            r = reward(new_state)
+            r = reward(new_state, state)
 
             q_table[state][action] = q_table[state][action] + learning_rate_a * (
                 r + discount_factor_g * np.max(q_table[new_state]) - q_table[state][action]
