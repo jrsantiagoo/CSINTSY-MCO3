@@ -11,6 +11,9 @@ from cat_env import make_env
 import matplotlib.pyplot as plt
 
 def reward(new_state: int, old_state: int):
+    if new_state == old_state:
+        return -8
+
     agent_row = new_state // 1000
     agent_col = (new_state // 100) % 10
     cat_row = (new_state // 10) % 10
@@ -95,9 +98,6 @@ def train_bot(cat_name, render: int = -1):
             new_state, _, done, _, _ = env.step(action)
 
             r = reward(new_state, state)
-
-            if state == new_state:
-                r = -8
 
             q_table[state][action] = q_table[state][action] + learning_rate_a * (
                 r + discount_factor_g * np.max(q_table[new_state]) - q_table[state][action]
