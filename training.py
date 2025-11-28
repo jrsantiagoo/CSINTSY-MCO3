@@ -60,12 +60,12 @@ def train_bot(cat_name, render: int = -1):
     discount_factor_g = 0.95
 
     epsilon = 1
-    epsilon_decay_rate = 0.0005
+    epsilon_decay_rate = 0.0004
     rng = np.random.default_rng()
 
     rewards_per_ep = np.zeros(episodes + 1)
+    moves_per_ep = np.zeros(episodes + 1)
 
-    
     #############################################################################
     # END OF YOUR CODE. DO NOT MODIFY ANYTHING BEYOND THIS LINE.                #
     #############################################################################
@@ -113,6 +113,7 @@ def train_bot(cat_name, render: int = -1):
             learning_rate_a = 0.0001
         
         rewards_per_ep[ep] = ep_reward
+        moves_per_ep[ep] = moves
 
         #############################################################################
         # END OF YOUR CODE. DO NOT MODIFY ANYTHING BEYOND THIS LINE.                #
@@ -127,7 +128,18 @@ def train_bot(cat_name, render: int = -1):
     sum_rewards = np.zeros(episodes)
     for t in range(episodes):
         sum_rewards[t] = np.sum(rewards_per_ep[max(0,t-100):(t+1)])
+    mean_moves = np.zeros(episodes)
+    for t in range(episodes):
+        mean_moves[t] = np.mean(moves_per_ep[max(0,t-100):(t+1)])
+
+    print("Average move of last 100 runs: ", int(mean_moves[4999]))
+
     plt.plot(sum_rewards)
     plt.savefig('plot.png')
+
+    plt.clf()
+
+    plt.plot(mean_moves)
+    plt.savefig('plot_moves.png')
 
     return q_table
