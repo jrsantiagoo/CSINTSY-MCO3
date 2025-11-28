@@ -64,7 +64,6 @@ def train_bot(cat_name, render: int = -1):
     rng = np.random.default_rng()
 
     rewards_per_ep = np.zeros(episodes + 1)
-
     
     #############################################################################
     # END OF YOUR CODE. DO NOT MODIFY ANYTHING BEYOND THIS LINE.                #
@@ -128,6 +127,7 @@ def train_bot(cat_name, render: int = -1):
     for t in range(episodes):
         sum_rewards[t] = np.sum(rewards_per_ep[max(0,t-100):(t+1)])
     plt.plot(sum_rewards)
-    plt.savefig('plot.png')
+    filename = cat_name + "_rewards.png"
+    plt.savefig(filename)
 
     return q_table
