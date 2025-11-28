@@ -56,7 +56,7 @@ def train_bot(cat_name, render: int = -1):
     # Hint: You may want to declare variables for the hyperparameters of the    #
     # training process such as learning rate, exploration rate, etc.            #
     #############################################################################
-    learning_rate_a = 0.5
+    learning_rate_a = 0.2
     discount_factor_g = 0.95
 
     epsilon = 1
@@ -110,7 +110,7 @@ def train_bot(cat_name, render: int = -1):
         epsilon = max(epsilon - epsilon_decay_rate, 0)
 
         if epsilon == 0:
-            learning_rate_a = 0.0001
+            learning_rate_a = 0.001
         
         rewards_per_ep[ep] = ep_reward
         moves_per_ep[ep] = moves
