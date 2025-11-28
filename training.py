@@ -97,7 +97,7 @@ def train_bot(cat_name, render: int = -1):
             r = reward(new_state, state)
 
             if state == new_state:
-                r = -10
+                r = -8
 
             q_table[state][action] = q_table[state][action] + learning_rate_a * (
                 r + discount_factor_g * np.max(q_table[new_state]) - q_table[state][action]
