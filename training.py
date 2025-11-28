@@ -25,7 +25,7 @@ def reward(new_state: int, old_state: int):
     old_dist = abs(old_agent_row - old_cat_row) + abs(old_agent_col - old_cat_col)
 
     if agent_row == cat_row and agent_col == cat_col:
-       return 10
+       return 1000
     
     if new_dist < old_dist:
         return 5
