@@ -135,11 +135,11 @@ def train_bot(cat_name, render: int = -1):
     print("Average move of last 100 runs: ", int(mean_moves[4999]))
 
     plt.plot(sum_rewards)
-    plt.savefig('plot.png')
+    plt.savefig(cat_name + '_rewards.png')
 
     plt.clf()
 
     plt.plot(mean_moves)
-    plt.savefig('plot_moves.png')
+    plt.savefig(cat_name + '_moves.png')
 
     return q_table
